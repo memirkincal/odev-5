@@ -1,0 +1,1 @@
+<h1>İşlem geçmişi</h1><table class="table bg-white mt-4"><thead><tr><th>Zaman</th><th>Eylem</th><th>Öğrenci ID</th></tr></thead><tbody><% @entries.each do |entry| %><tr><td><%= Rack::Utils.escape_html(entry[:created_at]) %></td><td><%= Rack::Utils.escape_html(entry[:action]) %></td><td><%= entry[:student_id] || 'Silindi' %></td></tr><% end %></tbody></table>

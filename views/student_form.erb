@@ -1,0 +1,6 @@
+<h1><%= @student ? 'Öğrenciyi düzenle' : 'Yeni öğrenci' %></h1>
+<form method="post" action="<%= @student ? "/students/#{@student[:id]}" : '/students' %>" class="module-card p-4 mt-4">
+  <label class="form-label">Ad</label><input class="form-control mb-3" name="name" required value="<%= Rack::Utils.escape_html(@student&.dig(:name).to_s) %>">
+  <label class="form-label">Durum</label><select class="form-select mb-4" name="status"><% %w[aktif donduruldu mezun].each do |status| %><option value="<%= status %>" <%= 'selected' if @student&.dig(:status)&.to_s == status %>><%= status %></option><% end %></select>
+  <button class="btn btn-primary">Kaydet</button><a class="btn btn-link" href="/students">Vazgeç</a>
+</form>

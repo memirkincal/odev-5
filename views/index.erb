@@ -1,4 +1,6 @@
-<% @page_title = "Başlangıç" %>
+<% @page_title = "Dashboard" %>
+<div class="row g-3 mb-4"><% {"Toplam" => :all, "Aktif" => :active, "Riskli" => :risky, "Kaldı" => :failed, "Telafi" => :remedy}.each do |label, key| %><div class="col"><div class="module-card p-4"><div><%= label %></div><strong class="display-6"><%= @totals[key] %></strong></div></div><% end %></div>
+<a class="btn btn-primary mb-4" href="/students">Öğrencileri yönet</a>
 
 <section class="hero-card p-4 p-md-5 mb-4">
   <p class="eyebrow mb-2">Yönetim paneli</p>

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "app"
+require File.join(Dir.pwd, "app")
 
 run DevamsizlikApp

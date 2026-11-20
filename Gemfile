@@ -5,6 +5,8 @@ ruby "~> 3.4.0"
 gem "sinatra", "~> 4.2"
 gem "sqlite3", "~> 2.10"
 gem "webrick", "~> 1.9"
+gem "rackup", "~> 2.3"
+gem "puma", "~> 8.0"
 
 group :test do
   gem "minitest", "~> 5.26"

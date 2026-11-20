@@ -7,6 +7,7 @@ gem "sqlite3", "~> 2.10"
 gem "webrick", "~> 1.9"
 gem "rackup", "~> 2.3"
 gem "puma", "~> 8.0"
+gem "csv", "~> 3.3"
 
 group :test do
   gem "minitest", "~> 5.26"

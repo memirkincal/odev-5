@@ -76,6 +76,10 @@ class WebTest < Minitest::Test
     assert_includes last_response.body, "Telafi gerekir"
     get "/reports"
     assert_includes last_response.body, "Riskli Ada"
+    get "/reports.csv"
+    assert last_response.ok?, last_response.body
+    assert_includes last_response.headers.fetch("content-type"), "text/csv"
+    assert_includes last_response.body, "Riskli Ada"
     get "/"
     assert last_response.ok?, last_response.body
     get "/students", status: "aktif", q: "Riskli"

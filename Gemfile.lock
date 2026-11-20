@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     base64 (0.3.0)
+    csv (3.3.2)
     logger (1.7.0)
     minitest (5.26.2)
     mustermann (3.0.4)
@@ -37,6 +38,7 @@ PLATFORMS
   x64-mingw-ucrt
 
 DEPENDENCIES
+  csv (~> 3.3)
   minitest (~> 5.26)
   puma (~> 8.0)
   rack-test (~> 2.2)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
+require "csv"
 require "sinatra/base"
 
 $LOAD_PATH.unshift(File.join(Dir.pwd, "lib"), File.join(Dir.pwd, "app", "repositories"))
@@ -137,6 +138,18 @@ class DevamsizlikApp < Sinatra::Base
   get "/reports" do
     @records = students.all.map { |row| [row, evaluation(row)] }.select { |_, result| result.riskli? }
     erb :reports
+  end
+
+  get "/reports.csv" do
+    content_type "text/csv", charset: "utf-8"
+    attachment "devamsizlik-raporu.csv"
+    CSV.generate(headers: true) do |csv|
+      csv << %w[id ad durum devamsizlik riskli kaldi telafi_gerekir]
+      students.all.each do |row|
+        result = evaluation(row)
+        csv << [row[:id], row[:name], row[:status], row[:absence_count], result.riskli?, result.kaldi?, result.telafi_gerekir?]
+      end
+    end
   end
 
   get "/audit" do

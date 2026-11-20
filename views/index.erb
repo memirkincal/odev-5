@@ -1,26 +1,25 @@
 <% @page_title = "Dashboard" %>
-<div class="row g-3 mb-4"><% {"Toplam" => :all, "Aktif" => :active, "Riskli" => :risky, "Kaldı" => :failed, "Telafi" => :remedy}.each do |label, key| %><div class="col"><div class="module-card p-4"><div><%= label %></div><strong class="display-6"><%= @totals[key] %></strong></div></div><% end %></div>
-<a class="btn btn-primary mb-4" href="/students">Öğrencileri yönet</a>
+<div class="page-heading"><div><p class="eyebrow mb-1">GENEL BAKIŞ</p><h1>Devam durumu</h1><p class="text-secondary mb-0">Öğrencilerin güncel durumunu tek bakışta görün.</p></div><a class="btn btn-outline-primary" href="/reports">Risk raporunu aç →</a></div>
+<div class="row g-3 mb-4"><% {"Toplam öğrenci" => [:all, "primary"], "Aktif" => [:active, "info"], "Riskli" => [:risky, "warning"], "Kaldı" => [:failed, "danger"], "Telafi gerekli" => [:remedy, "success"]}.each do |label, (key, tone)| %><div class="col-12 col-sm-6 col-xl"><div class="metric-card tone-<%= tone %>"><div class="metric-label"><%= label %></div><strong class="metric-value"><%= @totals[key] %></strong><span class="metric-hint">10 oturum üzerinden</span></div></div><% end %></div>
 
 <section class="hero-card p-4 p-md-5 mb-4">
   <p class="eyebrow mb-2">Yönetim paneli</p>
   <h1 class="display-6 fw-bold">Öğrenci devam durumunu tek ekrandan yönetin.</h1>
-  <p class="lead text-secondary mb-0">
-    Ruby kural motoru hazır. Veritabanı ve yönetim ekranları kısa fazlar hâlinde ekleniyor.
-  </p>
+  <p class="lead text-secondary mb-3">Devamsızlık sınırı tam 3 oturumda başlar. Dört ve üzeri devamsızlıkta öğrenci kalır.</p>
+  <a class="btn btn-primary" href="/students">Öğrencileri yönet</a>
 </section>
 
 <div class="row g-3">
   <% [
-    ["Öğrenciler", "Kayıt, durum ve arama"],
-    ["10 Oturum", "Geldi / gelmedi takibi"],
-    ["Risk Raporu", "Riskli, kalan ve telafi gerekenler"],
-    ["Denetim Kaydı", "Değişiklik geçmişi"]
-  ].each do |title, description| %>
+    ["Öğrenciler", "Kayıt, durum ve arama", "/students"],
+    ["10 Oturum", "Geldi / gelmedi takibi", "/students"],
+    ["Risk Raporu", "Riskli, kalan ve telafi gerekenler", "/reports"],
+    ["Denetim Kaydı", "Değişiklik geçmişi", "/audit"]
+  ].each do |title, description, path| %>
     <div class="col-12 col-md-6 col-xl-3">
       <article class="module-card h-100 p-4">
         <h2 class="h5"><%= title %></h2>
-        <p class="text-secondary mb-0"><%= description %></p>
+        <p class="text-secondary"><%= description %></p><a class="stretched-link text-decoration-none" href="<%= path %>">Aç →</a>
       </article>
     </div>
   <% end %>

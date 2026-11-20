@@ -4,25 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= defined?(@page_title) && @page_title ? "#{@page_title} · " : "" %>DevamTakip</title>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/app.css">
   </head>
   <body>
-    <header class="app-header border-bottom">
-      <nav class="container py-3 d-flex align-items-center justify-content-between">
-        <a class="brand text-decoration-none" href="/">DevamTakip</a>
-        <div class="d-flex gap-3"><a href="/students">Öğrenciler</a><a href="/reports">Risk raporu</a><a href="/audit">İşlem geçmişi</a></div>
-        <span class="badge text-bg-primary">Ruby 3.4</span>
-      </nav>
-    </header>
-
-    <main class="container py-5">
-      <%= yield %>
-    </main>
-
-    <footer class="container pb-4 text-secondary small">
-      Öğrenci ve Devamsızlık Kural Motoru
-    </footer>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Ana menü">
+        <a class="brand text-decoration-none" href="/"><span class="brand-mark">D</span><span>DevamTakip<small>Yönetim paneli</small></span></a>
+        <div class="sidebar-label">MENÜ</div>
+        <nav class="sidebar-nav">
+          <a class="<%= request.path_info == '/' ? 'active' : '' %>" href="/"><span class="nav-icon">▦</span>Genel bakış</a>
+          <a class="<%= request.path_info.start_with?('/students') ? 'active' : '' %>" href="/students"><span class="nav-icon">♙</span>Öğrenciler</a>
+          <a class="<%= request.path_info == '/reports' ? 'active' : '' %>" href="/reports"><span class="nav-icon">◫</span>Risk raporu</a>
+          <a class="<%= request.path_info == '/audit' ? 'active' : '' %>" href="/audit"><span class="nav-icon">◷</span>İşlem geçmişi</a>
+        </nav>
+        <div class="sidebar-foot"><span class="status-dot"></span> Sistem hazır <small>Ruby 3.4 · SQLite</small></div>
+      </aside>
+      <div class="main-panel">
+        <header class="topbar"><div><span class="eyebrow">DEVAM TAKİP SİSTEMİ</span><p class="mb-0 topbar-subtitle">10 oturumluk akademik devam yönetimi</p></div><a class="btn btn-primary" href="/students/new">+ Yeni öğrenci</a></header>
+        <main class="content-wrap"><%= yield %></main>
+        <footer class="app-footer">Öğrenci ve Devamsızlık Kural Motoru · <a href="/health">Sistem durumu</a></footer>
+      </div>
+    </div>
   </body>
 </html>

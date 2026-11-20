@@ -13,6 +13,8 @@ bundle exec ruby app.rb
 
 Tarayıcıda `http://localhost:4567` adresini açın. Öğrenci ekleme/düzenleme/silme, 10 oturumun devam işaretleme ekranı, risk raporu ve işlem geçmişi mevcuttur. Demo veriler tekrar eklenmeden seed komutu yeniden çalıştırılabilir. SQLite dosyası `data/devamsizlik.db` altında kalır ve Git'e eklenmez. Web testleri `bundle exec ruby test/web_test.rb`, veritabanı testleri `bundle exec ruby test/database_test.rb` komutlarıyla çalışır.
 
+Yönetim arayüzü, [Bootstrap'ın resmi dashboard örneğindeki](https://getbootstrap.com/docs/5.3/examples/dashboard/) sol menü ve içerik düzeninden esinlenen özgün ERB/CSS uyarlamasıdır. Bootstrap 5.3.3 CSS'i CDN üzerinden yüklenir; çevrimdışı kullanımda temel HTML işlevleri çalışır fakat görünüm sadeleşir.
+
 Bu ek katmanın `Gemfile` bağımlılıkları vardır; aşağıdaki bağımsız ödev kural motoru yalnız Ruby stdlib ve Minitest kullanır.
 
 Ruby 3.4 ile yazılmış bu proje, bir öğrencinin 10 oturumluk devamsızlık durumunu üç açık kuralla değerlendirir:

@@ -1,0 +1,121 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "rbconfig"
+
+# Bu komut proje kökünden `ruby bin/kontrol` biçiminde çalıştırılır.
+# Windows Ruby, Türkçe karakter içeren mutlak `__dir__` yolunu OEM kod
+# sayfasıyla döndürebildiği için güvenilir UTF-8 çalışma dizinini kullanırız.
+ROOT = Dir.pwd
+REQUIRED_FILES = %w[
+  .ruby-version
+  AGENTS.md
+  lib/ogrenci.rb
+  lib/devamsizlik_kontrol.rb
+  test/ogrenci_test.rb
+].freeze
+CORE_CLASSES = %w[
+  Array BasicObject Class Dir Exception FalseClass File Float Hash Integer Kernel
+  Module NilClass Numeric Object Proc Range Regexp String Struct Symbol Time TrueClass
+].freeze
+
+def relative(path)
+  path.delete_prefix("#{ROOT}/").delete_prefix("#{ROOT}\\")
+end
+
+def required_files_present?
+  missing = REQUIRED_FILES.reject { |path| File.file?(File.join(ROOT, path)) }
+  return true if missing.empty?
+
+  warn "Eksik zorunlu dosyalar:"
+  missing.each { |path| warn "  - #{path}" }
+  false
+end
+
+def ruby_version_valid?
+  return true if RUBY_VERSION.match?(/\A3\.4(?:\.|\z)/)
+
+  warn "Ruby 3.4 gerekli; çalışan sürüm: #{RUBY_VERSION}"
+  false
+end
+
+def source_guard_valid?
+  files = Dir[File.join(ROOT, "lib", "**", "*.rb")].sort
+  return true if files.empty?
+
+  valid = true
+  core_pattern = CORE_CLASSES.join("|")
+
+  files.each do |file|
+    source = File.read(file, encoding: "UTF-8")
+    findings = []
+    findings << "method_missing yasak" if source.match?(/\bmethod_missing\b/)
+    findings << "standart sınıf yeniden açılamaz" if source.match?(/^\s*class\s+(?:#{core_pattern})\b/)
+    findings << "class_eval/module_eval ile monkey patch yasak" if source.match?(/\b(?:class_eval|module_eval)\b/)
+
+    next if findings.empty?
+
+    valid = false
+    findings.each { |finding| warn "#{relative(file)}: #{finding}" }
+  end
+
+  valid
+end
+
+def syntax_valid?
+  files = Dir[File.join(ROOT, "lib", "**", "*.rb")].sort
+  files.all? do |file|
+    system(RbConfig.ruby, "-c", file, out: File::NULL) || begin
+      warn "Sözdizimi hatası: #{relative(file)}"
+      false
+    end
+  end
+end
+
+def tests_pass?
+  puts "Minitest çalıştırılıyor..."
+  # Windows, komut satırı argümanlarını OEM kod sayfasıyla çözer. Proje yolu
+  # ASCII dışı karakter içerdiğinde mutlak yol bozulduğu için test dosyası
+  # çalışma dizinine göre `load` ile yüklenir.
+  system(RbConfig.ruby, "-Itest", "-e", "load 'test/ogrenci_test.rb'", chdir: ROOT)
+end
+
+def run_once
+  puts "\n== Harness kontrolü =="
+  checks = [ruby_version_valid?, required_files_present?, source_guard_valid?, syntax_valid?]
+  checks << tests_pass? if checks.all?
+  passed = checks.all?
+  puts(passed ? "KONTROL BAŞARILI" : "KONTROL BAŞARISIZ")
+  passed
+end
+
+def watched_files
+  Dir[File.join(ROOT, "{lib,test,bin}", "**", "*")]
+    .select { |path| File.file?(path) }
+    .concat([File.join(ROOT, "AGENTS.md"), File.join(ROOT, ".ruby-version")])
+    .select { |path| File.file?(path) }
+end
+
+def snapshot
+  watched_files.to_h { |path| [path, File.mtime(path).to_f] }
+end
+
+if ARGV == ["--watch"]
+  puts "Değişiklikler izleniyor. Durdurmak için Ctrl+C."
+  run_once
+  previous = snapshot
+
+  loop do
+    sleep 1
+    current = snapshot
+    next if current == previous
+
+    previous = current
+    run_once
+  end
+elsif ARGV.empty?
+  exit(run_once ? 0 : 1)
+else
+  warn "Kullanım: ruby bin/kontrol [--watch]"
+  exit 2
+end

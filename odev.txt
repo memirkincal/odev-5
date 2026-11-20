@@ -1,0 +1,81 @@
+TESLİM TARİHİ
+20 Kasım 2026 Cuma, 23:59.
+Linkler (GitHub repo linki) bu ödeve teslim edilmelidir.
+Bireysel ödevdir. Grup çalışması yoktur.
+Bu ödevin puanı vize/sınav ağırlığına doğrudan etki edecektir.
+
+ÖN KOŞUL
+- 2 Kasım 2026 ders slaytları (`YZM379 · İleri Ruby ve Harness.pptx`), ders transkripti ve Kısa Sınav 2'yi incelemiş olmak.
+- Ruby 3.4 (.ruby-version) ve standart kütüphane (stdlib + Minitest). Harici devasa gem'ler yasaktır.
+
+NEDEN BU ÖDEV? (DERSİN TEZİ)
+"Ajan = Model + Harness."
+Model (Claude, GPT vb.) zaten Ruby kodu yazabiliyor. Kod yazmak ucuzladı; asıl mühendislik değeri ajanın neyi göreceğini, hangi kurallara uyacağını, sınır vakalarını nasıl yakalayacağını ve hatalarından nasıl kalıcı ders çıkaracağını tasarlamakta.
+
+Derste zaman yetmediği için yapamadığımız 45 dakikalık laboratuvar uygulamasını bu ödevle kendi başınıza yöneteceksiniz. Hislerinizle değil ("Hocam çok iyi hissettirdi, çok hızlı yazdı"), sayılarla ve metriklerle yöneteceğiz. Vibe coding yok; ölçüm ve harness var.
+
+NE YAPACAKSINIZ?
+
+1) Görev Tanımı: Öğrenci ve Devamsızlık Kural Motoru
+Uygulamanız bir öğrencinin devamsızlık durumuna göre akademik durumunu tespit eden bir Ruby motoru olacaktır:
+- `Ogrenci` sınıfı: `ad`, `durum` (`:aktif`, `:donduruldu`, `:mezun`), `devamsizlik` (0..10 oturum).
+- Metot üretimi: Durum sorguları (`aktif?`, `mezun?`) açık ve aranabilir olmalı (`define_method`). `method_missing` ve `monkey patch` (açık sınıf) kesinlikle YASAKTIR.
+- Kurallar:
+  1. `riskli`: Devamsızlık tam 3 olduğunda (10 oturumda %30) ve üzeri ise (`>= 3`). Sınır vaka: 3 devamsızlık riskli SAYILIR.
+  2. `kaldi`: Devamsızlık 4 ve üzeri olduğunda (`>= 4`).
+  3. Kendi Kuralınız: Özgün bir kural tanımlayın (Örn: `:burs_kesilir`, `:onur_adayi`, `:telafi_gerekir` vb.).
+
+2) Adım 1: A Koşusu (Rehbersiz & Ham Koşu)
+- Boş bir klasör açın.
+- Ajanınıza (Claude Code, Cursor, ChatGPT, Gemini CLI vb.) yalnızca genel bir prompt verin: "Öğrenci devamsızlık kontrolü yap, devamsızlık sınırı %30'dur."
+- Ajanın ilk seferde yaptığı hataları dikkatle not edin:
+  * Sınır değerde (tam 3'te) `>= 3` mü yazdı yoksa `> 3` mü?
+  * Metotları nasıl tanımladı (monkey patch mi yaptı, method_missing mi uydurdu)?
+  * Hangi Ruby sözdizimini kullandı, kaç tur attı?
+
+3) Adım 2: Ratchet (Mandal) — Hatadan Kalıcı Kurala
+Ajanın A koşusunda yaptığı her hatayı kalıcı bir altyapıya dönüştürün:
+- Rehbere Dönüştür (`AGENTS.md`): Türkiye'nin anayasasındaki sert maddeler gibi; ajanın şüpheye düşeceği, eğitim verisinde olmayan kuralları tek tek yazın (Sürüm: 3.4, tam 3 devamsızlık risklidir, monkey patch yasaktır). `ln -s AGENTS.md CLAUDE.md` yapın.
+- Sensöre Dönüştür (`test/ogrenci_test.rb`): Minitest ile sınır vakaları test edin (tam 3 devamsızlık testi, bilinmeyen metot testi).
+- Doğrulama Kancası (`bin/kontrol`): Ajan kodu her kaydettiğinde arka planda çalışan ve hata varsa ajanın önüne atan kancayı hazırlayın.
+- `RATCHET_LOG.md`: Karşılaşılan hata | Kalıcı kural/test | Hangi katman (Rehber/Sensör) tablosunu tutun.
+
+4) Adım 3: B Koşusu (Harness ile Koşu) ve Ölçüm
+- Aynı görevi, hazırladığınız `AGENTS.md`, Minitest testleri ve kancadan oluşan harness ortamında ajana sıfırdan koşturun.
+- A ve B koşularını karşılaştırın:
+  * Tur sayısı (Turns): Kaç turdan kaça düştü?
+  * Hata sayısı: Testler ilk seferde yakaladı mı?
+  * Maliyet/Token: Rehber girdi tokenını artırdı ama turları kısaltarak toplamda kazandırdı mı?
+- Bu sonuçları `README.md` içinde "A/B Koşusu ve Ölçüm Raporu" olarak tabloyla sunun.
+
+PUANLAMA (0, 85, 100 Kuralı)
+Gidiş yoluna veya harcanan soyut emeğe puan verilmez.
+
+0 Puan (Aşağıdakilerden biri yeterlidir):
+- GitHub reposu yoksa veya gizliyse (public olmalı)
+- Kod çalışmıyor veya testler kırmızı (fail) ise
+- `method_missing` veya standart sınıfa monkey patch yapılmışsa
+- Ratchet günlüğü (`RATCHET_LOG.md`) yoksa ya da uydurma ise
+- Sınır değer kuralı (tam 3 devamsızlık) test edilmemiş veya `>= 3` kuralı çiğnenmişse
+
+85 Puan:
+- `Ogrenci` ve `DevamsizlikKontrol` sınıfları tertemiz ve çalışan Ruby koduyla yazılmış
+- 3 kural (riskli, kaldi + kendi kuralınız) eksiksiz çalışıyor
+- `AGENTS.md` dosyası (sert anayasa kuralları, gereksiz laf kalabalığı yok)
+- Sınır vakaları (tam 3 devamsızlık) sınayan kapsamlı Minitest testleri (hepsi yeşil)
+- `RATCHET_LOG.md`: A koşusunda yakalanan gerçek hatalar ve B'de kalıcılaşan kural tablosu
+- `README.md` içinde A/B koşu metrikleri tablosu (tur sayısı, gözlemler)
+
+100 Puan:
+- 85 puanın tamamı +
+- `bin/kontrol` otomatik çalıştırma kancasının kurulmuş ve belgelenmiş olması
+- A ve B koşularının log/çıktı kanıtlarının repoya eklenmesi ve hislerle değil net sayılarla token/tur analizinin yapılmış olması
+
+TESLİM EDİLECEKLER
+GitHub repo linki (Repo içinde şunlar yer almalıdır):
+1. `lib/ogrenci.rb` ve `lib/devamsizlik_kontrol.rb`
+2. `test/ogrenci_test.rb` (Minitest testleri)
+3. `AGENTS.md` (ve `CLAUDE.md` sembolik bağı)
+4. `RATCHET_LOG.md` (Hata $\to$ Kural günlüğü)
+5. `README.md` (A/B karşılaştırma tablosu ve 'Yapamadıklarım' bölümü)
+6. `.ruby-version` (`3.4`)

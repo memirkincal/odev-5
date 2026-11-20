@@ -1,0 +1,13 @@
+Run options: --seed 1530
+
+# Running:
+
+...............
+
+Finished in 0.001255s, 11953.1437 runs/s, 30281.2974 assertions/s.
+
+15 runs, 38 assertions, 0 failures, 0 errors, 0 skips
+
+== Harness kontrolü ==
+Minitest çalıştırılıyor...
+KONTROL BAŞARILI

@@ -1,0 +1,17 @@
+{
+  "session_id": "ses_e07331e7affebzAUwhzKjrry5f",
+  "model": "opencode/deepseek-v4.1-flash-free",
+  "prompt": "\"Öğrenci devamsızlık kontrolü yap, devamsızlık sınırı %30'dur.\"",
+  "user_messages": 1,
+  "cost": 0,
+  "tokens": {
+    "input": 11303,
+    "output": 1736,
+    "reasoning": 1100,
+    "cache": {
+      "read": 48768,
+      "write": 0
+    }
+  },
+  "outcome": "succeeded"
+}

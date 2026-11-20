@@ -1,0 +1,1 @@
+Öğrenci devamsızlık kontrolü yap, devamsızlık sınırı %30'dur.

@@ -2,9 +2,13 @@
 # frozen_string_literal: true
 
 require "date"
-require_relative "../app/repositories/database"
-require_relative "../app/repositories/student_repository"
-require_relative "../app/repositories/attendance_repository"
+
+# `ruby db/seeds.rb` proje kökünden çalıştırılır. Dir.pwd, Windows'ta Türkçe
+# karakter içeren __dir__ değerinden daha güvenilir bir UTF-8 yol sağlar.
+$LOAD_PATH.unshift(File.join(Dir.pwd, "app", "repositories"))
+require "database"
+require "student_repository"
+require "attendance_repository"
 
 module DevamTakip
   # Demo verileri. Tüm işlemler repository katmanı üzerinden yapılır ve

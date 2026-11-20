@@ -1,0 +1,25 @@
+<% @page_title = "Başlangıç" %>
+
+<section class="hero-card p-4 p-md-5 mb-4">
+  <p class="eyebrow mb-2">Yönetim paneli</p>
+  <h1 class="display-6 fw-bold">Öğrenci devam durumunu tek ekrandan yönetin.</h1>
+  <p class="lead text-secondary mb-0">
+    Ruby kural motoru hazır. Veritabanı ve yönetim ekranları kısa fazlar hâlinde ekleniyor.
+  </p>
+</section>
+
+<div class="row g-3">
+  <% [
+    ["Öğrenciler", "Kayıt, durum ve arama"],
+    ["10 Oturum", "Geldi / gelmedi takibi"],
+    ["Risk Raporu", "Riskli, kalan ve telafi gerekenler"],
+    ["Denetim Kaydı", "Değişiklik geçmişi"]
+  ].each do |title, description| %>
+    <div class="col-12 col-md-6 col-xl-3">
+      <article class="module-card h-100 p-4">
+        <h2 class="h5"><%= title %></h2>
+        <p class="text-secondary mb-0"><%= description %></p>
+      </article>
+    </div>
+  <% end %>
+</div>

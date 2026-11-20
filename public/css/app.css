@@ -1,0 +1,55 @@
+:root {
+  --ink: #18212f;
+  --muted: #627086;
+  --surface: #ffffff;
+  --canvas: #f5f7fb;
+  --brand: #4f46e5;
+  --brand-dark: #3730a3;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.app-header {
+  background: rgb(255 255 255 / 90%);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  color: var(--brand-dark);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero-card {
+  background:
+    radial-gradient(circle at top right, rgb(99 102 241 / 22%), transparent 42%),
+    var(--surface);
+  border: 1px solid rgb(79 70 229 / 14%);
+  border-radius: 1.5rem;
+  box-shadow: 0 1.25rem 3rem rgb(31 41 55 / 8%);
+}
+
+.eyebrow {
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.module-card {
+  background: var(--surface);
+  border: 1px solid #e7eaf0;
+  border-radius: 1rem;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.module-card:hover {
+  box-shadow: 0 0.75rem 2rem rgb(31 41 55 / 8%);
+  transform: translateY(-2px);
+}
